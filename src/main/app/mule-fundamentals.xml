@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="mule-fundamentalsFlow1" doc:name="mule-fundamentalsFlow1">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" doc:name="HTTP"/>
+        <expression-filter expression="#[message.payload != &quot;/fabicon.ico&quot;]" doc:name="Expression"/>
+        <set-variable doc:name="set language variable" value="#[message.inboundProperties[&quot;language&quot;]]" variableName="language"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars[&quot;language&quot;] == &quot;portuguese&quot;]">
+                <set-payload doc:name="respond in portuguese" value="todo bom"/>
+            </when>
+            <when expression="#[flowVars[&quot;language&quot;] == &quot;french&quot;]">
+                <set-payload doc:name="respond in french" value="wi"/>
+            </when>
+            <otherwise>
+                <set-payload doc:name="respond in spanish" value="&quot;hola como estas&quot;"/>
+            </otherwise>
+        </choice>
+        <logger level="INFO" doc:name="Logger" message="The message: #[message.payload] means hello in #[flowVars[&quot;language&quot;]]"/>
+    </flow>
+</mule>
